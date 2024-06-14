@@ -24,12 +24,17 @@ public class SocketIOManager : MonoBehaviour
     [SerializeField]
     internal List<string> bonusdata = null;
     internal bool isResultdone = false;
+
+    private SocketManager manager;
+
     [SerializeField]
     internal JSHandler _jsManager;
 
     [SerializeField]
     private string SocketURI;
-    private SocketManager manager;
+
+    [SerializeField]
+    private string testToken;
 
     protected string gameID = "SL-CHL";
 
@@ -46,6 +51,7 @@ public class SocketIOManager : MonoBehaviour
     }
 
     string myAuth = null;
+
     private void OpenSocket()
     {
         // Create and setup SocketOptions
@@ -89,7 +95,7 @@ public class SocketIOManager : MonoBehaviour
         {
             return new
             {
-                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdhdXJhdiIsImRlc2lnbmF0aW9uIjoiY29tcGFueSIsImlhdCI6MTcxODMzOTk2OCwiZXhwIjoxNzE4NDI2MzY4fQ.yCx6chCeFmNAgoR58OeoCwzdKjHlrFZRIxIN8mY-M4s"
+                token = testToken
             };
         };
         options.Auth = authFunction;
@@ -280,6 +286,7 @@ public class SocketIOManager : MonoBehaviour
         {
             Debug.LogWarning("Socket is not connected.");
         }
+
     }
 
     internal void OnCollect()

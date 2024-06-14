@@ -5427,6 +5427,7 @@ MonoBehaviour:
   bonusdata: []
   _jsManager: {fileID: 500036493}
   SocketURI: https://game-rtp-backend-w7g7.onrender.com
+  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdhdXJhdiIsImRlc2lnbmF0aW9uIjoiY29tcGFueSIsImlhdCI6MTcxODE2NzcyOSwiZXhwIjoxNzE4MjU0MTI5fQ.spRnTq7MMMOgDd9KpkItN0IWawV9vhA6byD1mNl9OBQ
 --- !u!114 &500036493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27305,7 +27306,7 @@ SceneRoots:
   - {fileID: 2046803209}
   - {fileID: 963807278}
   - {fileID: 377874624}
-  - {fileID: 500036491}
   - {fileID: 4885625708411774476}
+  - {fileID: 500036491}
   - {fileID: 207527278}
   - {fileID: 1541726219}

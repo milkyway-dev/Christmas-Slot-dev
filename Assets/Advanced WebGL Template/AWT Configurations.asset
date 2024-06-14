@@ -73,7 +73,7 @@ MonoBehaviour:
   _disableMobileWarning: 1
   _targetPath: /Users/underpinmacgamedev/Documents/SlotBuilds/Christmas14052024
   _s11: "\n    &&& title2019start &&&<title>%UNITY_WEB_NAME%</title>&&& title2019end
-    &&&\n    &&& title2020start &&&<title>Zombieland</title>&&& title2020end &&&\n   
+    &&&\n    &&& title2020start &&&<title>Christmas</title>&&& title2020end &&&\n   
     &&& UnityLoader1 &&& <script src=\"%UNITY_WEBGL_LOADER_URL%\"></script> &&& UnityLoader2
     &&&\n    "
   _s21: "\n            applicationInstance = UnityLoader.instantiate(\"gameContainer\",
@@ -83,4 +83,4 @@ MonoBehaviour:
     frameworkUrl: buildUrl + \"/Christmas14052024.framework.js.unityweb\",\n       
     codeUrl: buildUrl + \"/Christmas14052024.wasm.unityweb\",\n        streamingAssetsUrl:
     \"StreamingAssets\",\n        companyName: \"DefaultCompany\",\n        productName:
-    \"Zombieland\",\n        productVersion: \"1.0\",\n    };\n"
+    \"Christmas\",\n        productVersion: \"1.0\",\n    };\n"
