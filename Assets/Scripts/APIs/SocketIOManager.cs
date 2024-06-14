@@ -89,7 +89,7 @@ public class SocketIOManager : MonoBehaviour
         {
             return new
             {
-                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdhdXJhdiIsImRlc2lnbmF0aW9uIjoiY29tcGFueSIsImlhdCI6MTcxODA4MzM3MCwiZXhwIjoxNzE4MTY5NzcwfQ.rJ5Ger1nqwogz5P7POPKRhuiNK6gG1vjsUQhtgKa0WM"
+                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdhdXJhdiIsImRlc2lnbmF0aW9uIjoiY29tcGFueSIsImlhdCI6MTcxODMzOTk2OCwiZXhwIjoxNzE4NDI2MzY4fQ.yCx6chCeFmNAgoR58OeoCwzdKjHlrFZRIxIN8mY-M4s"
             };
         };
         options.Auth = authFunction;
