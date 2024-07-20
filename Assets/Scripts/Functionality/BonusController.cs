@@ -55,8 +55,8 @@ public class BonusController : MonoBehaviour
 
     internal void GameOver()
     {
-        slotManager.CheckPopups = false;
-        //_audioManager.SwitchBGSound(false);
+        if (slotManager) slotManager.CheckWinPopups();
+        _audioManager.SwitchBGSound(false);
         if (Bonus_Object) Bonus_Object.SetActive(false);
     }
 
@@ -66,17 +66,15 @@ public class BonusController : MonoBehaviour
 
         value = CaseValues[index];
 
-
-        if(index == CaseValues.Count - 1)
-        {
-            isGameOver = true;
-        }
-
         index++;
 
         if (value > 0)
         {
             amount += value;
+        }
+        else
+        {
+            isGameOver = true;
         }
 
         if (mainamount_Text) mainamount_Text.text = amount.ToString();
@@ -86,19 +84,19 @@ public class BonusController : MonoBehaviour
 
     internal void PlayWinLooseSound(bool isWin)
     {
-        //if (isWin)
-        //{
-        //    _audioManager.PlayBonusAudio("win");
-        //}
-        //else
-        //{
-        //    _audioManager.PlayBonusAudio("lose");
-        //}
+        if (isWin)
+        {
+            _audioManager.PlayBonusAudio("win");
+        }
+        else
+        {
+            _audioManager.PlayBonusAudio("lose");
+        }
     }
 
     private void StartBonus()
     {
-        //_audioManager.SwitchBGSound(true);
+        _audioManager.SwitchBGSound(true);
         if (Bonus_Object) Bonus_Object.SetActive(true);
     }
 }

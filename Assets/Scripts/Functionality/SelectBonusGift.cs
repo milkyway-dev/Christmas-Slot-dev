@@ -27,13 +27,15 @@ public class SelectBonusGift : MonoBehaviour
         if (_bonusManager) _bonusManager.enableRayCastPanel(true);
         int value = 0;
         value = _bonusManager.GetValue();
-        if(value == -1)
+        if(value > 0)
         {
-            if (text_AnimScript) text_AnimScript.SetText("No Bonus");
+            if (_bonusManager) _bonusManager.PlayWinLooseSound(true);
+            if (text_AnimScript) text_AnimScript.SetText("+" + value.ToString());
         }
         else
         {
-            if (text_AnimScript) text_AnimScript.SetText("+" + value.ToString());
+            if (_bonusManager) _bonusManager.PlayWinLooseSound(false);
+            if (text_AnimScript) text_AnimScript.SetText("No Bonus");
         }
         if (this_GameObject) this_GameObject.enabled = false;
         if (selected_GameObject) selected_GameObject.SetActive(true);
