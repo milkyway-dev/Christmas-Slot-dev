@@ -436,6 +436,8 @@ public class SlotBehaviour : MonoBehaviour
         if (currentBalance < currentTotalBet)
         {
             CompareBalance();
+            StopAutoSpin();
+            yield return new WaitForSeconds(1);
             yield break;
         }
         if (audioController) audioController.PlayWLAudio("spin");
