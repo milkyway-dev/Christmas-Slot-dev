@@ -42,7 +42,6 @@ public class SlotBehaviour : MonoBehaviour
     [SerializeField]
     private Button MaxBet_Button;
     [SerializeField] private Button BetPerLine;
-    [SerializeField] private Button Gamble_button;
     [SerializeField] private Button Bet_plus;
     [SerializeField] private Button Bet_minus;
 
@@ -114,6 +113,9 @@ public class SlotBehaviour : MonoBehaviour
     private SocketIOManager SocketManager;
 
     [SerializeField]
+    private GambleController gambleController;
+
+    [SerializeField]
     private Sprite[] Box_Sprites;
 
     [SerializeField]
@@ -156,8 +158,6 @@ public class SlotBehaviour : MonoBehaviour
 
         if (Bet_minus) Bet_minus.onClick.RemoveAllListeners();
         if (Bet_minus) Bet_minus.onClick.AddListener(delegate { ChangeBet(false); });
-
-        if (Gamble_button) Gamble_button.interactable = false;
     }
 
     private void AutoSpin()
@@ -441,7 +441,6 @@ public class SlotBehaviour : MonoBehaviour
             yield break;
         }
         if (audioController) audioController.PlayWLAudio("spin");
-        if (Gamble_button) Gamble_button.interactable = false;
         IsSpinning = true;
         ToggleButtonGrp(false);
         for (int i = 0; i < numberOfSlots; i++)
@@ -518,6 +517,16 @@ public class SlotBehaviour : MonoBehaviour
         yield return new WaitUntil(() => !CheckPopups);
         if (!IsAutoSpin)
         {
+            Debug.Log("run this line");
+            if (SocketManager.playerdata.currentWining > 0 && SocketManager.playerdata.currentWining <= SocketManager.GambleLimit)
+            {
+                Debug.Log("run this line 1 ");
+                gambleController.toggleDoubleButton(true);
+            }
+            else
+            {
+                Debug.Log("run this line exception " + SocketManager.playerdata.currentWining + "  " + SocketManager.GambleLimit);
+            }
             ToggleButtonGrp(true);
             IsSpinning = false;
         }
@@ -667,7 +676,6 @@ public class SlotBehaviour : MonoBehaviour
 
         if (LineId.Count > 0)
         {
-            if (Gamble_button) Gamble_button.interactable = true;
             if (audioController) audioController.PlayWLAudio("win");
             if (jackpot > 0)
             {
@@ -709,7 +717,6 @@ public class SlotBehaviour : MonoBehaviour
         }
         else
         {
-            if (Gamble_button) Gamble_button.interactable = false;
             if (audioController) audioController.StopWLAaudio();
         }
     }
