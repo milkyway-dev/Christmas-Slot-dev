@@ -1,223 +1,303 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
-
+using TMPro;
 public class GambleController : MonoBehaviour
 {
-    [SerializeField] private GameObject gamble_game;
-    [SerializeField] private Button doubleButton;
-    [SerializeField] private Button collectButton;
-    [SerializeField] private Button gambleButton;
-    [SerializeField] private Button gambleCloseButton;
-    [SerializeField] private SocketIOManager socketManager;
-    [SerializeField] private AudioController audioController;
+    [SerializeField]
+    private GameObject gamble_game;
+    [SerializeField]
+    private Button doubleButton;
+    [SerializeField]
+    private SocketIOManager socketManager;
+    [SerializeField]
+    private AudioController audioController;
+    [SerializeField]
+    internal List<CardFlip> allcards = new List<CardFlip>();
+    [SerializeField]
+    private TMP_Text winamount;
+    [SerializeField]
+    private SlotBehaviour slotController;
+    [SerializeField]
+    private Sprite[] HeartSpriteList;
+    [SerializeField]
+    private Sprite[] ClubSpriteList;
+    [SerializeField]
+    private Sprite[] SpadeSpriteList;
+    [SerializeField]
+    private Sprite[] DiamondSpriteList;
+    [SerializeField]
+    private Sprite cardCover;
+    [SerializeField]
+    private CardFlip DealerCard_Script;
 
-    [SerializeField] private List<CardFlip> allcards = new List<CardFlip>();
-    [SerializeField] internal List<CardFlip> allcardsTemp = new List<CardFlip>();
+    [SerializeField]
+    private GameObject loadingScreen;
+    [SerializeField]
+    private Image slider;
 
-    [SerializeField] private SlotBehaviour slotController;
-    [SerializeField] private Sprite[] cardSpriteList;
-    [SerializeField] private Sprite cardCover;
-    [SerializeField] internal List<Sprite> tempSpriteList = new List<Sprite>();
-    [SerializeField] private Image DealerCard;
-
-    [SerializeField] private GameObject loadingScreen;
-    [SerializeField] private Image slider;
-
-    [SerializeField] private TMP_Text betText;
-    [SerializeField] private TMP_Text bankText;
-    [SerializeField] private TMP_Text doubleToText;
+    private Sprite highcard_Sprite;
+    private Sprite lowcard_Sprite;
+    private Sprite spare1card_Sprite;
+    private Sprite spare2card_Sprite;
 
     internal bool gambleStart = false;
-    internal bool card_flipped;
+    internal bool isResult = false;
 
     private void Start()
     {
         if (doubleButton) doubleButton.onClick.RemoveAllListeners();
         if (doubleButton) doubleButton.onClick.AddListener(StartGamblegame);
-        if (gambleButton) gambleButton.onClick.AddListener(OnGambleStart);
-        if (collectButton) collectButton.onClick.AddListener(OnGameOver);
-        if (gambleCloseButton) gambleCloseButton.onClick.AddListener(OnGameOver);
-
-        toggleGambleButton(false);
+        toggleDoubleButton(false);
     }
 
-    internal void toggleGambleButton(bool toggle)
+    internal void toggleDoubleButton(bool toggle)
     {
-
-        gambleButton.interactable = toggle;
+        doubleButton.interactable = toggle;
     }
 
     void StartGamblegame()
     {
+        winamount.text = "0";
         if (audioController) audioController.PlayButtonAudio();
         if (gamble_game) gamble_game.SetActive(true);
-        PickRandomCard();
-        StartCoroutine(LoadingRoutine());
+        loadingScreen.SetActive(true);
+        StartCoroutine(loadingRoutine());
         StartCoroutine(GambleCoroutine());
     }
 
-    void OnGambleStart(){
-        gambleButton.interactable = true;
-        SetText(socketManager.resultData.WinAmout);
-
-        StartGamblegame();
+    private void ComputeCards()
+    {
+        highcard_Sprite = CardSet(socketManager.myMessage.highCard.suit, socketManager.myMessage.highCard.value);
+        lowcard_Sprite = CardSet(socketManager.myMessage.lowCard.suit, socketManager.myMessage.lowCard.value);
+        spare1card_Sprite = CardSet(socketManager.myMessage.exCards[0].suit, socketManager.myMessage.exCards[0].value);
+        spare2card_Sprite = CardSet(socketManager.myMessage.exCards[1].suit, socketManager.myMessage.exCards[1].value);
     }
+
+    private Sprite CardSet(string suit, string value)
+    {
+        Sprite tempSprite = null;
+        if (suit.ToUpper() == "HEARTS")
+        {
+            if (value.ToUpper() == "A")
+            {
+                tempSprite = HeartSpriteList[0];
+            }
+            else if (value.ToUpper() == "K")
+            {
+                tempSprite = HeartSpriteList[12];
+            }
+            else if (value.ToUpper() == "Q")
+            {
+                tempSprite = HeartSpriteList[11];
+            }
+            else if (value.ToUpper() == "J")
+            {
+                tempSprite = HeartSpriteList[10];
+            }
+            else
+            {
+                int myval = int.Parse(value);
+                tempSprite = HeartSpriteList[myval - 1];
+            }
+        }
+        else if (suit.ToUpper() == "DIAMONDS")
+        {
+            if (value.ToUpper() == "A")
+            {
+                tempSprite = DiamondSpriteList[0];
+            }
+            else if (value.ToUpper() == "K")
+            {
+                tempSprite = DiamondSpriteList[12];
+            }
+            else if (value.ToUpper() == "Q")
+            {
+                tempSprite = DiamondSpriteList[11];
+            }
+            else if (value.ToUpper() == "J")
+            {
+                tempSprite = DiamondSpriteList[10];
+            }
+            else
+            {
+                int myval = int.Parse(value);
+                tempSprite = DiamondSpriteList[myval - 1];
+            }
+        }
+        else if (suit.ToUpper() == "CLUBS")
+        {
+            if (value.ToUpper() == "A")
+            {
+                tempSprite = ClubSpriteList[0];
+            }
+            else if (value.ToUpper() == "K")
+            {
+                tempSprite = ClubSpriteList[12];
+            }
+            else if (value.ToUpper() == "Q")
+            {
+                tempSprite = ClubSpriteList[11];
+            }
+            else if (value.ToUpper() == "J")
+            {
+                tempSprite = ClubSpriteList[10];
+            }
+            else
+            {
+                int myval = int.Parse(value);
+                tempSprite = ClubSpriteList[myval - 1];
+            }
+        }
+        else if (suit.ToUpper() == "SPADES")
+        {
+            if (value.ToUpper() == "A")
+            {
+                tempSprite = SpadeSpriteList[0];
+            }
+            else if (value.ToUpper() == "K")
+            {
+                tempSprite = SpadeSpriteList[12];
+            }
+            else if (value.ToUpper() == "Q")
+            {
+                tempSprite = SpadeSpriteList[11];
+            }
+            else if (value.ToUpper() == "J")
+            {
+                tempSprite = SpadeSpriteList[10];
+            }
+            else
+            {
+                int myval = int.Parse(value);
+                tempSprite = SpadeSpriteList[myval - 1];
+            }
+        }
+        else
+        {
+            Debug.LogError("Bad Value");
+        }
+        return tempSprite;
+    }
+
     IEnumerator GambleCoroutine()
     {
-
-
-        ToggleButtonGrp(false);
         for (int i = 0; i < allcards.Count; i++)
         {
-
-            allcardsTemp.Add(allcards[i]);
-        }
-
-        for (int i = 0; i < allcardsTemp.Count; i++)
-        {
-            allcardsTemp[i].once = false;
-            allcardsTemp[i].Card_Button.interactable = true;
-            allcardsTemp[i].Card_Button.image.sprite = cardCover;
-            card_flipped = false;
-
+            allcards[i].once = false;
         }
 
         socketManager.OnGamble();
 
         yield return new WaitUntil(() => socketManager.isResultdone);
-        foreach (var item in allcardsTemp)
+        ComputeCards();
+        gambleStart = true;
+    }
+
+    internal Sprite GetCard()
+    {
+        if (socketManager.myMessage.playerWon)
         {
-            item.Card_Button.interactable = true;
-
-        }
-        if (socketManager.gambleData.totalWinningAmount > 0)
-        {
-            for (int i = 0; i < allcardsTemp.Count; i++)
-            {
-                allcardsTemp[i].Card_Sprite = tempSpriteList[tempSpriteList.Count - 1];
-
-
-            }
-            tempSpriteList.RemoveAt(tempSpriteList.Count - 1);
-
+            if (DealerCard_Script) DealerCard_Script.cardImage = lowcard_Sprite;
+            return highcard_Sprite;
         }
         else
         {
-            for (int i = 0; i < allcardsTemp.Count; i++)
-            {
-                allcardsTemp[i].Card_Sprite = tempSpriteList[0];
-
-            }
-            tempSpriteList.RemoveAt(0);
-
+            if (DealerCard_Script) DealerCard_Script.cardImage = highcard_Sprite;
+            return lowcard_Sprite;
         }
-        gambleStart = true;
-        
-        yield return FlipAllCard();
-        collectButton.interactable = true;
-
-        allcardsTemp.Clear();
-        SetText(socketManager.gambleData.totalWinningAmount);
-        slotController.updateBalance();
-        ToggleButtonGrp(true);
-        if (socketManager.gambleData.totalWinningAmount == 0)
-        {
-            ToggleButtonGrp(false);
-            OnGameOver();
-        }
-
     }
 
-    IEnumerator  FlipAllCard()
+    internal void RunOnCollect()
     {
-        yield return new WaitUntil(() => card_flipped);
-        yield return new WaitForSeconds(1.5f);
-        List<CardFlip> tempCardList = new List<CardFlip>();
-        foreach (var item in allcardsTemp)
-        {
-            if (item.once)
-            {
-                allcardsTemp.Remove(item);
-            }
-            item.Card_Button.interactable = false;
+        StartCoroutine(NewCollectRoutine());
+    }
 
-        }
-        for (int i = 0; i < allcardsTemp.Count; i++)
+    private IEnumerator NewCollectRoutine()
+    {
+        isResult = false;
+        socketManager.OnCollect();
+        yield return new WaitUntil(() => socketManager.isResultdone);
+        isResult = true;
+    }
+
+    internal void FlipAllCard()
+    {
+        int cardVal = 0;
+        for (int i = 0; i < allcards.Count; i++)
         {
-            allcards[i].Card_Sprite = tempSpriteList[i];
-            yield return new WaitUntil(()=> allcardsTemp[i].FlipMyObject()) ;
+            if (allcards[i].once)
+            {
+                continue;
+            }
+            else
+            {
+                allcards[i].Card_Button.interactable = false;
+                if (cardVal == 0)
+                {
+                    allcards[i].cardImage = spare1card_Sprite;
+                    cardVal++;
+                }
+                else
+                {
+                    allcards[i].cardImage = spare2card_Sprite;
+                }
+                allcards[i].FlipMyObject();
+                allcards[i].Card_Button.interactable = false;
+            }
         }
+        if (DealerCard_Script) DealerCard_Script.FlipMyObject();
+        if (socketManager.myMessage.playerWon)
+        {
+            winamount.text = "YOU WIN" + "\n" + socketManager.myMessage.winningAmount.ToString();
+        }
+        else
+        {
+            winamount.text = "YOU LOSE" + "\n" + "0";
+        }
+
+        StartCoroutine(Collectroutine());
+
     }
 
 
     IEnumerator Collectroutine()
     {
-        ToggleButtonGrp(false);
-        gambleStart = false;
-        socketManager.OnCollect();
-        yield return new WaitUntil(() => socketManager.isResultdone);
         yield return new WaitForSeconds(2f);
+        gambleStart = false;
+        yield return new WaitForSeconds(2);
         slotController.updateBalance();
-        toggleGambleButton(false);
-        ToggleButtonGrp(true);
-        SetText(0);
         if (gamble_game) gamble_game.SetActive(false);
+        allcards.ForEach((element) =>
+        {
+            element.Card_Button.image.sprite = cardCover;
+            element.Reset();
 
+        });
+        DealerCard_Script.Card_Button.image.sprite = cardCover;
+        DealerCard_Script.once = false;
+        toggleDoubleButton(false);
 
     }
 
     void OnGameOver()
     {
         StartCoroutine(Collectroutine());
-
     }
 
-    void PickRandomCard()
+    IEnumerator loadingRoutine()
     {
-        int maxlength = cardSpriteList.Length / 5;
-
-        for (int i = 0; i < 5; i++)
+        float fillAmount = 1;
+        while (fillAmount > 0.1)
         {
-            int index = Random.Range(maxlength*i, maxlength*(i+1));
-            tempSpriteList.Add(cardSpriteList[index]);
-        }
-
-
-    }
-
-    void ToggleButtonGrp(bool toggle) {
-
-
-        if (doubleButton) doubleButton.interactable = toggle;
-        if (collectButton) collectButton.interactable=toggle;
-        if (gambleCloseButton) gambleCloseButton.interactable=toggle;
-    }
-
-    void SetText(double amount) {
-
-        betText.text = amount.ToString();
-        bankText.text = amount.ToString();
-        doubleToText.text = (amount*2).ToString();
-
-    }
-
-    IEnumerator LoadingRoutine()
-    {
-        slider.fillAmount = 1;
-        loadingScreen.SetActive(true);
-
-        yield return new WaitUntil(() => gambleStart);
-        while (slider.fillAmount > 0)
-        {
-            slider.fillAmount -= Time.deltaTime;
-            if (slider.fillAmount <= 0) yield break;
+            fillAmount -= Time.deltaTime;
+            slider.fillAmount = fillAmount;
+            if (fillAmount == 0.1) yield break;
             yield return null;
         }
-
-
+        yield return new WaitUntil(() => gambleStart);
+        slider.fillAmount = 0;
         yield return new WaitForSeconds(1f);
         loadingScreen.SetActive(false);
     }

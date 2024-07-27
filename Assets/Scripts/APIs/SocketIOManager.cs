@@ -25,7 +25,9 @@ public class SocketIOManager : MonoBehaviour
     internal UIData initUIData = null;
     internal GameData resultData = null;
     internal PlayerData playerdata = null;
-    internal GambleResults gambleData = null;
+    internal Message myMessage = null;
+    internal double GambleLimit = 0;
+
     [SerializeField]
     internal List<string> bonusdata = null;
     internal bool isResultdone = false;
@@ -248,6 +250,7 @@ public class SocketIOManager : MonoBehaviour
                     List<string> InitialReels = ConvertListOfListsToStrings(initialData.Reel);
                     List<string> LinesString = ConvertListListIntToListString(initialData.Lines);
                     InitialReels = RemoveQuotes(InitialReels);
+                    GambleLimit = myData.message.maxGambleBet;
                     PopulateSlotSocket(InitialReels, LinesString);
                     break;
                 }
@@ -264,8 +267,14 @@ public class SocketIOManager : MonoBehaviour
             case "GambleResult":
                 {
                     Debug.Log(jsonObject);
-                    gambleData = myData.message.GambleData;
-                    playerdata = myData.message.PlayerData;
+                    myMessage = myData.message;
+                    isResultdone = true;
+                    break;
+                }
+            case "gambleInitData":
+                {
+                    Debug.Log(jsonObject);
+                    myMessage = myData.message;
                     isResultdone = true;
                     break;
                 }
@@ -304,11 +313,12 @@ public class SocketIOManager : MonoBehaviour
     internal void OnGamble()
     {
         isResultdone = false;
-        GambleData message = new GambleData();
-        //message.Data = new GambleData();
+        RiskData message = new RiskData();
 
-        message.collect = false;
-        message.id = "GAMBLE";
+        message.data = new GambleData();
+        message.id = "GambleInit";
+        message.data.GAMBLETYPE = "HIGHCARD";
+
         string json = JsonUtility.ToJson(message);
         Debug.Log(json);
         if (this.manager.Socket != null && this.manager.Socket.IsOpen)
@@ -320,17 +330,18 @@ public class SocketIOManager : MonoBehaviour
         {
             Debug.LogWarning("Socket is not connected.");
         }
-
     }
 
     internal void OnCollect()
     {
         isResultdone = false;
 
-        GambleData message = new GambleData();
+        RiskData message = new RiskData();
 
-        message.collect = true;
-        message.id = "GAMBLE";
+        message.data = new GambleData();
+        message.id = "GambleResultData";
+        message.data.GAMBLETYPE = "HIGHCARD";
+
         string json = JsonUtility.ToJson(message);
         Debug.Log(json);
         if (this.manager.Socket != null && this.manager.Socket.IsOpen)
@@ -444,15 +455,6 @@ public class BetData
 }
 
 [Serializable]
-public class GambleData
-{
-    public bool collect;
-    public string id;
-
-}
-
-
-[Serializable]
 public class AuthData
 {
     public string GameID;
@@ -467,6 +469,12 @@ public class MessageData
 }
 
 [Serializable]
+public class GambleData
+{
+    public string GAMBLETYPE;
+}
+
+[Serializable]
 public class InitData
 {
     public AuthData Data;
@@ -478,14 +486,6 @@ public class AbtLogo
 {
     public string logoSprite { get; set; }
     public string link { get; set; }
-}
-
-[Serializable]
-public class GambleResults
-{
-    //public double currentWining;
-    public double totalWinningAmount;
-
 }
 
 [Serializable]
@@ -515,9 +515,42 @@ public class Message
 {
     public GameData GameData { get; set; }
     public UIData UIData { get; set; }
-    public GambleResults GambleData { get; set; }
     public PlayerData PlayerData { get; set; }
     public List<string> BonusData { get; set; }
+    public HighCard highCard { get; set; }
+    public LowCard lowCard { get; set; }
+    public List<ExCard> exCards { get; set; }
+    public bool playerWon { get; set; }
+    public int winningAmount { get; set; }
+    public double maxGambleBet { get; set; }
+}
+
+[Serializable]
+public class RiskData
+{
+    public GambleData data;
+    public string id;
+}
+
+[Serializable]
+public class HighCard
+{
+    public string suit { get; set; }
+    public string value { get; set; }
+}
+
+[Serializable]
+public class LowCard
+{
+    public string suit { get; set; }
+    public string value { get; set; }
+}
+
+[Serializable]
+public class ExCard
+{
+    public string suit { get; set; }
+    public string value { get; set; }
 }
 
 [Serializable]
