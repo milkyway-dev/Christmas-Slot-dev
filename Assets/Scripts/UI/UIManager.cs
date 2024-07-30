@@ -68,6 +68,12 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject DisconnectPopup_Object;
 
+    [Header("AnotherDevice Popup")]
+    [SerializeField]
+    private Button CloseAD_Button;
+    [SerializeField]
+    private GameObject ADPopup_Object;
+
     [Header("Quit Popup")]
     [SerializeField]
     private GameObject QuitPopup_Object;
@@ -220,6 +226,9 @@ public class UIManager : MonoBehaviour
         if (YesQuit_Button) YesQuit_Button.onClick.RemoveAllListeners();
         if (YesQuit_Button) YesQuit_Button.onClick.AddListener(CallOnExitFunction);
 
+        if (CloseAD_Button) CloseAD_Button.onClick.RemoveAllListeners();
+        if (CloseAD_Button) CloseAD_Button.onClick.AddListener(CallOnExitFunction);
+
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.RemoveAllListeners();
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.AddListener(CallOnExitFunction);
 
@@ -279,6 +288,11 @@ public class UIManager : MonoBehaviour
             slotManager.CheckPopups = false;
 
         });
+    }
+
+    internal void ADfunction()
+    {
+        OpenPopup(ADPopup_Object);
     }
 
     private void CallOnExitFunction()
