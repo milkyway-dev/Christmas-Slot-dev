@@ -480,10 +480,14 @@ public class SlotBehaviour : MonoBehaviour
         {
             Debug.Log("Error while conversion " + e.Message);
         }
+        double initAmount = balance;
 
         balance = balance - bet;
 
-        if (Balance_text) Balance_text.text = balance.ToString("f2");
+        DOTween.To(() => initAmount, (val) => initAmount = val, balance, 0.8f).OnUpdate(() =>
+        {
+            if (Balance_text) Balance_text.text = initAmount.ToString("f2");
+        });
 
         SocketManager.AccumulateResult(BetCounter);
 
@@ -571,7 +575,8 @@ public class SlotBehaviour : MonoBehaviour
 
     internal void updateBalance()
     {
-        if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString();
+        if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString("f2");
+        if (TotalWin_text) TotalWin_text.text = SocketManager.playerdata.currentWining.ToString("f2");
     }
 
     internal void CheckBonusGame()
