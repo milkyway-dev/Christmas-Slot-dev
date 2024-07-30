@@ -317,6 +317,8 @@ public class SocketIOManager : MonoBehaviour
                 {
                     Debug.Log(jsonObject);
                     myMessage = myData.message;
+                    playerdata.Balance = myData.message.Balance;
+                    playerdata.currentWining = myData.message.currentWining;
                     isResultdone = true;
                     break;
                 }
@@ -576,7 +578,8 @@ public class Message
     public LowCard lowCard { get; set; }
     public List<ExCard> exCards { get; set; }
     public bool playerWon { get; set; }
-    public int winningAmount { get; set; }
+    public double Balance { get; set; }
+    public double currentWining { get; set; }
     public double maxGambleBet { get; set; }
 }
 
