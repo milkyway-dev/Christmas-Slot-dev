@@ -414,7 +414,7 @@ public class SocketIOManager : MonoBehaviour
         message.data = new BetData();
         message.data.currentBet = bet;
         message.data.spins = 1;
-        message.data.currentLines = 9;
+        message.data.currentLines = 20;
         message.id = namespaceName;
         // Serialize message data to JSON
         string json = JsonUtility.ToJson(message);
