@@ -85,6 +85,8 @@ public class UIManager : MonoBehaviour
     private Button CrossQuit_Button;
     [SerializeField]
     private Button BackQuit_Button;
+    [SerializeField]
+    private Button Splash_Quit_Button;
 
     [Header("Megawin Popup")]
     [SerializeField] private GameObject megawin;
@@ -207,6 +209,9 @@ public class UIManager : MonoBehaviour
 
         if (GameExit_Button) GameExit_Button.onClick.RemoveAllListeners();
         if (GameExit_Button) GameExit_Button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
+
+        if (Splash_Quit_Button) Splash_Quit_Button.onClick.RemoveAllListeners();
+        if (Splash_Quit_Button) Splash_Quit_Button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
 
         if (NoQuit_Button) NoQuit_Button.onClick.RemoveAllListeners();
         if (NoQuit_Button) NoQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
