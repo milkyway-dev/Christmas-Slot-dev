@@ -158,6 +158,10 @@ public class SlotBehaviour : MonoBehaviour
 
         if (Bet_minus) Bet_minus.onClick.RemoveAllListeners();
         if (Bet_minus) Bet_minus.onClick.AddListener(delegate { ChangeBet(false); });
+
+        tweenHeight = (13 * IconSizeFactor) - 280;
+
+        ToggleBetButton(0);
     }
 
     private void AutoSpin()
@@ -185,6 +189,14 @@ public class SlotBehaviour : MonoBehaviour
             if (BetCounter < SocketManager.initialData.Bets.Count - 1)
             {
                 BetCounter++;
+                if(BetCounter >= SocketManager.initialData.Bets.Count - 1)
+                {
+                    ToggleBetButton(0);
+                }
+                else
+                {
+                    ToggleBetButton(2);
+                }
             }
         }
         else
@@ -192,6 +204,14 @@ public class SlotBehaviour : MonoBehaviour
             if (BetCounter > 0)
             {
                 BetCounter--;
+                if(BetCounter <= 0)
+                {
+                    ToggleBetButton(1);
+                }
+                else
+                {
+                    ToggleBetButton(2);
+                }
             }
         }
 
@@ -199,6 +219,25 @@ public class SlotBehaviour : MonoBehaviour
         if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.Bets[BetCounter] * Lines).ToString();
         currentTotalBet = SocketManager.initialData.Bets[BetCounter] * Lines;
         CompareBalance();
+    }
+
+    private void ToggleBetButton(int toggle)
+    {
+        switch(toggle)
+        {
+            case 0:
+                Bet_plus.interactable = false;
+                Bet_minus.interactable = true;
+                break;
+            case 1:
+                Bet_plus.interactable = true;
+                Bet_minus.interactable = false;
+                break;
+            case 2:
+                Bet_plus.interactable = true;
+                Bet_minus.interactable = true;
+                break;
+        }
     }
 
     private void CompareBalance()
@@ -269,18 +308,18 @@ public class SlotBehaviour : MonoBehaviour
         if (TotalBet_text) TotalBet_text.text = "99999";
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && SlotStart_Button.interactable)
-        {
-            StartSlots();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space) && SlotStart_Button.interactable)
+    //    {
+    //        StartSlots();
+    //    }
+    //}
 
-    internal void PopulateInitalSlots(int number, List<int> myvalues)
-    {
-        PopulateSlot(myvalues, number);
-    }
+    //internal void PopulateInitalSlots(int number, List<int> myvalues)
+    //{
+    //    PopulateSlot(myvalues, number);
+    //}
 
     internal void LayoutReset(int number)
     {
@@ -288,25 +327,37 @@ public class SlotBehaviour : MonoBehaviour
         if (SlotStart_Button) SlotStart_Button.interactable = true;
     }
 
-    private void PopulateSlot(List<int> values , int number)
+    internal void shuffleInitialMatrix()
     {
-        if (Slot_Objects[number]) Slot_Objects[number].SetActive(true);
-        for(int i = 0; i<values.Count; i++)
+        for (int i = 0; i < Tempimages.Count; i++)
         {
-            GameObject myImg = Instantiate(Image_Prefab, Slot_Transform[number]);
-            images[number].slotImages.Add(myImg.transform.GetChild(0).GetComponent<Image>());
-            images[number].slotImages[i].sprite = myImages[values[i]];
+            for (int j = 0; j < 3; j++)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, myImages.Length);
+                Tempimages[i].slotImages[j].transform.GetChild(0).GetComponent<Image>().sprite = myImages[randomIndex];
+            }
         }
-        for (int k = 0; k < 2; k++)
-        {
-            GameObject mylastImg = Instantiate(Image_Prefab, Slot_Transform[number]);
-            images[number].slotImages.Add(mylastImg.transform.GetChild(0).GetComponent<Image>());
-            images[number].slotImages[images[number].slotImages.Count - 1].sprite = myImages[values[k]];
-        }
-        if (mainContainer_RT) LayoutRebuilder.ForceRebuildLayoutImmediate(mainContainer_RT);
-        tweenHeight = (values.Count * IconSizeFactor) - 280;
-        GenerateMatrix(number);
     }
+
+    //private void PopulateSlot(List<int> values , int number)
+    //{
+    //    if (Slot_Objects[number]) Slot_Objects[number].SetActive(true);
+    //    for(int i = 0; i<values.Count; i++)
+    //    {
+    //        GameObject myImg = Instantiate(Image_Prefab, Slot_Transform[number]);
+    //        images[number].slotImages.Add(myImg.transform.GetChild(0).GetComponent<Image>());
+    //        images[number].slotImages[i].sprite = myImages[values[i]];
+    //    }
+    //    for (int k = 0; k < 2; k++)
+    //    {
+    //        GameObject mylastImg = Instantiate(Image_Prefab, Slot_Transform[number]);
+    //        images[number].slotImages.Add(mylastImg.transform.GetChild(0).GetComponent<Image>());
+    //        images[number].slotImages[images[number].slotImages.Count - 1].sprite = myImages[values[k]];
+    //    }
+    //    if (mainContainer_RT) LayoutRebuilder.ForceRebuildLayoutImmediate(mainContainer_RT);
+    //    tweenHeight = (values.Count * IconSizeFactor) - 280;
+    //    GenerateMatrix(number);
+    //}
 
     private void PopulateAnimationSprites(ImageAnimation animScript, int val)
     {
@@ -498,8 +549,8 @@ public class SlotBehaviour : MonoBehaviour
             List<int> resultnum = SocketManager.resultData.FinalResultReel[j]?.Split(',')?.Select(Int32.Parse)?.ToList();
             for (int i = 0; i < 5; i++)
             {
-                if (images[i].slotImages[images[i].slotImages.Count - 5 + j]) images[i].slotImages[images[i].slotImages.Count - 5 + j].sprite = myImages[resultnum[i]];
-                PopulateAnimationSprites(images[i].slotImages[images[i].slotImages.Count - 5 + j].gameObject.GetComponent<ImageAnimation>(), resultnum[i]);
+                if (images[i].slotImages[images[i].slotImages.Count - 5 + j].transform.GetChild(0)) images[i].slotImages[images[i].slotImages.Count - 5 + j].transform.GetChild(0).GetComponent<Image>().sprite = myImages[resultnum[i]];
+                PopulateAnimationSprites(images[i].slotImages[images[i].slotImages.Count - 5 + j].transform.GetChild(0).gameObject.GetComponent<ImageAnimation>(), resultnum[i]);
             }
         }
 
@@ -624,17 +675,17 @@ public class SlotBehaviour : MonoBehaviour
                 PayCalculator.GeneratePayoutLinesBackend(TempLineIds[i], true);
                 for (int k = 0; k < y_anim.Count; k++)
                 {
-                    if (Tempimages[k].slotImages[y_anim[k]].gameObject.GetComponent<ImageAnimation>().currentAnimationState == ImageAnimation.ImageState.PLAYING)
+                    if (Tempimages[k].slotImages[y_anim[k]].transform.GetChild(0).gameObject.GetComponent<ImageAnimation>().currentAnimationState == ImageAnimation.ImageState.PLAYING)
                     {
-                        Tempimages[k].slotImages[y_anim[k]].gameObject.GetComponent<SlotScript>().SetBg(Box_Sprites[TempLineIds[i]]);
+                        Tempimages[k].slotImages[y_anim[k]].transform.GetChild(0).gameObject.GetComponent<SlotScript>().SetBg(Box_Sprites[TempLineIds[i]]);
                     }
                 }
                 yield return new WaitForSeconds(3);
                 for (int k = 0; k < y_anim.Count; k++)
                 {
-                    if (Tempimages[k].slotImages[y_anim[k]].gameObject.GetComponent<ImageAnimation>().currentAnimationState == ImageAnimation.ImageState.PLAYING)
+                    if (Tempimages[k].slotImages[y_anim[k]].transform.GetChild(0).gameObject.GetComponent<ImageAnimation>().currentAnimationState == ImageAnimation.ImageState.PLAYING)
                     {
-                        Tempimages[k].slotImages[y_anim[k]].gameObject.GetComponent<SlotScript>().ResetBG();
+                        Tempimages[k].slotImages[y_anim[k]].transform.GetChild(0).gameObject.GetComponent<SlotScript>().ResetBG();
                     }
                 }
                 PayCalculator.ResetStaticLine();
@@ -661,7 +712,7 @@ public class SlotBehaviour : MonoBehaviour
         {
             foreach (Image child in images[i].slotImages)
             {
-                child.gameObject.GetComponent<SlotScript>().ResetBG();
+                child.transform.GetChild(0).gameObject.GetComponent<SlotScript>().ResetBG();
             }
         }
         PayCalculator.ResetLines();
@@ -700,7 +751,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     for (int k = 0; k < Tempimages[i].slotImages.Count; k++)
                     {
-                        StartGameAnimation(Tempimages[i].slotImages[k].gameObject);
+                        StartGameAnimation(Tempimages[i].slotImages[k].transform.GetChild(0).gameObject);
                     }
                 }
             }
@@ -714,11 +765,11 @@ public class SlotBehaviour : MonoBehaviour
                     {
                         if (points_anim[k] >= 10)
                         {
-                            StartGameAnimation(Tempimages[(points_anim[k] / 10) % 10].slotImages[points_anim[k] % 10].gameObject);
+                            StartGameAnimation(Tempimages[(points_anim[k] / 10) % 10].slotImages[points_anim[k] % 10].transform.GetChild(0).gameObject);
                         }
                         else
                         {
-                            StartGameAnimation(Tempimages[0].slotImages[points_anim[k]].gameObject);
+                            StartGameAnimation(Tempimages[0].slotImages[points_anim[k]].transform.GetChild(0).gameObject);
                         }
                     }
                 }
