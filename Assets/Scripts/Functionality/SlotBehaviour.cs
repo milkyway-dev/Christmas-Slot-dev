@@ -137,6 +137,7 @@ public class SlotBehaviour : MonoBehaviour
     private int BetCounter = 0;
     private double currentBalance = 0;
     private double currentTotalBet = 0;
+    internal bool IsHoldSpin = false;
 
     private void Start()
     {
@@ -162,6 +163,7 @@ public class SlotBehaviour : MonoBehaviour
         tweenHeight = (13 * IconSizeFactor) - 280;
 
         ToggleBetButton(0);
+        //CheckBetButton();
     }
 
     private void AutoSpin()
@@ -226,17 +228,37 @@ public class SlotBehaviour : MonoBehaviour
         switch(toggle)
         {
             case 0:
+                //When Reached To The Highest Of The Limit
                 Bet_plus.interactable = false;
                 Bet_minus.interactable = true;
                 break;
             case 1:
+                //When Reached To The Lowest Of The Limit
                 Bet_plus.interactable = true;
                 Bet_minus.interactable = false;
                 break;
             case 2:
+                //When Reached In The Middle Of The Limit
                 Bet_plus.interactable = true;
                 Bet_minus.interactable = true;
                 break;
+        }
+    }
+
+    private void CheckBetButton()
+    {
+        Debug.Log(string.Concat("<color=blue><b>", SocketManager.initialData.Bets.Count, "</b></color>"));
+        if(BetCounter >= SocketManager.initialData.Bets.Count -1)
+        {
+            ToggleBetButton(0);
+        }
+        else if(BetCounter <= 0)
+        {
+            ToggleBetButton(1);
+        }
+        else
+        {
+            ToggleBetButton(2);
         }
     }
 
@@ -295,6 +317,34 @@ public class SlotBehaviour : MonoBehaviour
             StopCoroutine(StopAutoSpinCoroutine());
         }
     }
+
+    //Start Auto Spin on Button Hold
+    #region Hold to auto spin
+    internal void StartSpinRoutine()
+    {
+        IsHoldSpin = false;
+        Invoke("AutoSpinHold", 2f);
+    }
+
+    internal void StopSpinRoutine()
+    {
+        CancelInvoke("AutoSpinHold");
+        if (IsAutoSpin)
+        {
+            IsAutoSpin = false;
+            if (AutoSpinStop_Button) AutoSpinStop_Button.gameObject.SetActive(false);
+            //if (AutoSpin_Button) AutoSpin_Button.gameObject.SetActive(true);
+            StartCoroutine(StopAutoSpinCoroutine());
+        }
+    }
+
+    private void AutoSpinHold()
+    {
+        Debug.Log("Auto Spin Started");
+        IsHoldSpin = true;
+        AutoSpin();
+    }
+    #endregion
 
     internal void CallCloseSocket()
     {
@@ -496,6 +546,7 @@ public class SlotBehaviour : MonoBehaviour
     private List<string> y_animationString;
     private IEnumerator TweenRoutine()
     {
+        gambleController.GambleTweeningAnim(false);
         if (currentBalance < currentTotalBet)
         {
             CompareBalance();
@@ -584,24 +635,37 @@ public class SlotBehaviour : MonoBehaviour
         yield return new WaitUntil(() => !CheckPopups);
         if (!IsAutoSpin)
         {
-            Debug.Log("run this line");
-            if (SocketManager.playerdata.currentWining > 0 && SocketManager.playerdata.currentWining <= SocketManager.GambleLimit)
-            {
-                Debug.Log("run this line 1 ");
-                gambleController.toggleDoubleButton(true);
-            }
-            else
-            {
-                Debug.Log("run this line exception " + SocketManager.playerdata.currentWining + "  " + SocketManager.GambleLimit);
-            }
+            ActivateGamble();
             ToggleButtonGrp(true);
             IsSpinning = false;
         }
         else
         {
-            yield return new WaitForSeconds(1f);
-            IsSpinning = false;
+            ActivateGamble();
+            yield return new WaitForSeconds(2f);
+            //IsSpinning = false;
         }
+    }
+
+    private void ActivateGamble()
+    {
+        Debug.Log("run this line");
+        if (SocketManager.playerdata.currentWining > 0 && SocketManager.playerdata.currentWining <= SocketManager.GambleLimit)
+        {
+            Debug.Log("run this line 1 ");
+            gambleController.toggleDoubleButton(true);
+            gambleController.GambleTweeningAnim(true);
+        }
+        else
+        {
+            Debug.Log("run this line exception " + SocketManager.playerdata.currentWining + "  " + SocketManager.GambleLimit);
+        }
+    }
+
+    internal void DeactivateGamble()
+    {
+        StopAutoSpin();
+        ToggleButtonGrp(true);
     }
 
     internal void CheckWinPopups()
@@ -643,8 +707,15 @@ public class SlotBehaviour : MonoBehaviour
         if (AutoSpin_Button) AutoSpin_Button.interactable = toggle;
         if (BetPerLine) BetPerLine.interactable = toggle;
         //if (Gamble_button) Gamble_button.interactable = toggle;
-        if (Bet_minus) Bet_minus.interactable = toggle;
-        if (Bet_plus) Bet_plus.interactable = toggle;
+        if (toggle)
+        {
+            CheckBetButton();
+        }
+        else
+        {
+            if (Bet_minus) Bet_minus.interactable = toggle;
+            if (Bet_plus) Bet_plus.interactable = toggle;
+        }
 
 
     }
@@ -797,7 +868,10 @@ public class SlotBehaviour : MonoBehaviour
         }
     }
 
-
+    internal void GambleCollect()
+    {
+        SocketManager.GambleCollectCall();
+    }
 
     #region TweeningCode
 
