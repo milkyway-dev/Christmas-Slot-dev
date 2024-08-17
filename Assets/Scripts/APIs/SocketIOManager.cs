@@ -51,6 +51,7 @@ public class SocketIOManager : MonoBehaviour
     private void Start()
     {
         OpenSocket();
+        Debug.unityLogger.logEnabled = false;
     }
 
     void ReceiveAuthToken(string jsonData)
