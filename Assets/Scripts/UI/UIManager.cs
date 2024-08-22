@@ -160,7 +160,7 @@ public class UIManager : MonoBehaviour
         if (Info_Button) Info_Button.onClick.AddListener(delegate { OpenPopup(PaytablePopup_Object); });
 
         if (PaytableExit_Button) PaytableExit_Button.onClick.RemoveAllListeners();
-        if (PaytableExit_Button) PaytableExit_Button.onClick.AddListener(delegate { ClosePopup(PaytablePopup_Object); });
+        if (PaytableExit_Button) PaytableExit_Button.onClick.AddListener(delegate { ClosePopup(PaytablePopup_Object); GoToPage(0); });
 
         if (Next_Button) Next_Button.onClick.RemoveAllListeners();
         if (Next_Button) Next_Button.onClick.AddListener(delegate { TurnPage(true); });
