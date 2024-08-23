@@ -32,8 +32,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject[] PageList;
     [SerializeField] private Button[] paginationButtonGrp;
     [SerializeField] private Button Infoback_button;
-    [SerializeField]
-    private TMP_Text[] SymbolsText;
+    [SerializeField] private TMP_Text[] SymbolsText;
+    [SerializeField] private TMP_Text Bonus_Text;
+    [SerializeField] private TMP_Text Wild_Text;
+
+
 
 
     [Header("Settings Popup")]
@@ -332,6 +335,33 @@ public class UIManager : MonoBehaviour
             }
             if (SymbolsText[i]) SymbolsText[i].text = text;
         }
+
+        for (int i = 0; i < paylines.symbols.Count; i++)
+        {
+            // if (paylines.symbols[i].Name.ToUpper() == "FREESPIN")
+            // {
+            //     if (FreeSpin_Text) FreeSpin_Text.text = paylines.symbols[i].description.ToString();
+            // }
+            // if (paylines.symbols[i].Name.ToUpper() == "SCATTER")
+            // {
+            //     if (Scatter_Text) Scatter_Text.text = paylines.symbols[i].description.ToString();
+            // }
+            // if (paylines.symbols[i].Name.ToUpper() == "JACKPOT")
+            // {
+            //     if (Jackpot_Text) Jackpot_Text.text = paylines.symbols[i].description.ToString();
+            // }
+            
+            if(paylines.symbols[i].Name.ToUpper() == "BONUS")
+            {
+                if (Bonus_Text) Bonus_Text.text = paylines.symbols[i].description.ToString();
+            }
+
+            if(paylines.symbols[i].Name.ToUpper() == "WILD")
+            {
+                if (Wild_Text) Wild_Text.text = paylines.symbols[i].description.ToString();
+            }
+        }
+
     }
 
     private void OpenPopup(GameObject Popup)
@@ -372,9 +402,9 @@ public class UIManager : MonoBehaviour
 
         paginationCounter = index + 1;
 
-        paginationCounter = Mathf.Clamp(paginationCounter, 1, 4);
+        paginationCounter = Mathf.Clamp(paginationCounter, 1, 6);
 
-        if (Next_Button) Next_Button.interactable = !(paginationCounter >= 4);
+        if (Next_Button) Next_Button.interactable = !(paginationCounter >= 6);
 
         if (Previous_Button) Previous_Button.interactable = !(paginationCounter <= 1);
 

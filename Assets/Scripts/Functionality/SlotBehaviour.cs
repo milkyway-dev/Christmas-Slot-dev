@@ -643,7 +643,7 @@ public class SlotBehaviour : MonoBehaviour
         {
             ActivateGamble();
             yield return new WaitForSeconds(2f);
-            //IsSpinning = false;
+            IsSpinning = false;
         }
     }
 
