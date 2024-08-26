@@ -139,6 +139,7 @@ public class SlotBehaviour : MonoBehaviour
     private double currentTotalBet = 0;
     internal bool IsHoldSpin = false;
 
+    private Tweener WinTween;
     private void Start()
     {
 
@@ -523,6 +524,9 @@ public class SlotBehaviour : MonoBehaviour
         {
             StopGameAnimation();
         }
+
+        WinningsAnim(false);
+
         PayCalculator.ResetLines();
         tweenroutine=StartCoroutine(TweenRoutine());
     }
@@ -633,6 +637,9 @@ public class SlotBehaviour : MonoBehaviour
         }
 
         yield return new WaitUntil(() => !CheckPopups);
+
+                if (SocketManager.resultData.WinAmout > 0)
+            WinningsAnim(true);
         if (!IsAutoSpin)
         {
             ActivateGamble();
@@ -643,7 +650,7 @@ public class SlotBehaviour : MonoBehaviour
         {
             ActivateGamble();
             yield return new WaitForSeconds(2f);
-            //IsSpinning = false;
+            IsSpinning = false;
         }
     }
 
@@ -720,6 +727,18 @@ public class SlotBehaviour : MonoBehaviour
 
     }
 
+    private void WinningsAnim(bool IsStart)
+    {
+        if (IsStart)
+        {
+            WinTween = TotalWin_text.transform.DOScale(new Vector2(1.5f, 1.5f), 1f).SetLoops(-1, LoopType.Yoyo).SetDelay(0);
+        }
+        else
+        {
+            WinTween.Kill();
+            TotalWin_text.transform.localScale = Vector3.one;
+        }
+    }
     internal void SetInitialUI()
     {
         BetCounter = SocketManager.initialData.Bets.Count - 1;
@@ -813,7 +832,7 @@ public class SlotBehaviour : MonoBehaviour
         TempLineIds = LineId;
         List<int> points_anim = null;
 
-        if (LineId.Count > 0)
+        if (LineId.Count > 0 || points_AnimString.Count>0)
         {
             if (audioController) audioController.PlayWLAudio("win");
             if (jackpot > 0)
