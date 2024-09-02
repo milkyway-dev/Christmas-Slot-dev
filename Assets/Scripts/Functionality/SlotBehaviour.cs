@@ -163,7 +163,7 @@ public class SlotBehaviour : MonoBehaviour
 
         tweenHeight = (13 * IconSizeFactor) - 280;
 
-        ToggleBetButton(0);
+        ToggleBetButton(1);
         //CheckBetButton();
     }
 
