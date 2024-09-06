@@ -64,7 +64,7 @@ public class BonusController : MonoBehaviour
     {
         int value = 0;
 
-        value = CaseValues[index];
+        value = (int)(CaseValues[index] * slotManager.currentBet);
 
         index++;
 
