@@ -121,8 +121,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Loading_Object) Loading_Object.SetActive(true);
-        StartCoroutine(LoadingRoutine());
+        // if (Loading_Object) Loading_Object.SetActive(true);
+        // StartCoroutine(LoadingRoutine());
     }
 
     private IEnumerator LoadingRoutine()
