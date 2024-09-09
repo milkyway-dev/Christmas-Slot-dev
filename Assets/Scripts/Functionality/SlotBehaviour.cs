@@ -139,6 +139,7 @@ public class SlotBehaviour : MonoBehaviour
     internal double currentBet = 0;
     private double currentTotalBet = 0;
     internal bool IsHoldSpin = false;
+    private bool CheckSpinAudio = false;
 
     private Tweener WinTween;
     private void Start()
@@ -357,7 +358,7 @@ public class SlotBehaviour : MonoBehaviour
     {
         if (audioController) audioController.PlayButtonAudio();
 
-        if (TotalBet_text) TotalBet_text.text = "99999";
+        if (TotalBet_text) TotalBet_text.text = "";
     }
 
     //private void Update()
@@ -534,13 +535,7 @@ public class SlotBehaviour : MonoBehaviour
 
     private void OnApplicationFocus(bool focus)
     {
-        if (focus)
-        {
-            if (!IsSpinning)
-            {
-                if (audioController) audioController.StopWLAaudio();
-            }
-        }
+        if(audioController) audioController.CheckFocusFunction(focus,CheckSpinAudio);
     }
 
     [SerializeField]
@@ -561,8 +556,9 @@ public class SlotBehaviour : MonoBehaviour
             yield return new WaitForSeconds(1);
             yield break;
         }
-        if (audioController) audioController.PlayWLAudio("spin");
+        CheckSpinAudio = true;
         IsSpinning = true;
+        if (audioController) audioController.PlayWLAudio("spin");
         ToggleButtonGrp(false);
         for (int i = 0; i < numberOfSlots; i++)
         {
@@ -880,6 +876,8 @@ public class SlotBehaviour : MonoBehaviour
         {
             if (audioController) audioController.StopWLAaudio();
         }
+        CheckSpinAudio = false;
+
     }
 
     private void GenerateMatrix(int value)

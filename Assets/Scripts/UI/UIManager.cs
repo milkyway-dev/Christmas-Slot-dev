@@ -121,8 +121,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Loading_Object) Loading_Object.SetActive(true);
-        StartCoroutine(LoadingRoutine());
+        // if (Loading_Object) Loading_Object.SetActive(true);
+        // StartCoroutine(LoadingRoutine());
     }
 
     private IEnumerator LoadingRoutine()
@@ -220,10 +220,10 @@ public class UIManager : MonoBehaviour
         if (NoQuit_Button) NoQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
 
         if (CrossQuit_Button) CrossQuit_Button.onClick.RemoveAllListeners();
-        if (CrossQuit_Button) CrossQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
+        if (CrossQuit_Button) CrossQuit_Button.onClick.AddListener(delegate { if(!isExit){ClosePopup(QuitPopup_Object);} });
 
         if (BackQuit_Button) BackQuit_Button.onClick.RemoveAllListeners();
-        if (BackQuit_Button) BackQuit_Button.onClick.AddListener(delegate { ClosePopup(QuitPopup_Object); });
+        if (BackQuit_Button) BackQuit_Button.onClick.AddListener(delegate { if(!isExit){ClosePopup(QuitPopup_Object);} });
 
         if (LBExit_Button) LBExit_Button.onClick.RemoveAllListeners();
         if (LBExit_Button) LBExit_Button.onClick.AddListener(delegate { ClosePopup(LBPopup_Object); });
@@ -308,7 +308,7 @@ public class UIManager : MonoBehaviour
         isExit = true;
         audioController.PlayButtonAudio();
         slotManager.CallCloseSocket();
-        Application.ExternalCall("window.parent.postMessage", "onExit", "*");
+        // Application.ExternalCall("window.parent.postMessage", "onExit", "*");
     }
 
     internal void InitialiseUIData(string SupportUrl, string AbtImgUrl, string TermsUrl, string PrivacyUrl, Paylines symbolsText)

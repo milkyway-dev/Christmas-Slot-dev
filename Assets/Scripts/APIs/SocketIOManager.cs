@@ -12,9 +12,12 @@ using Best.SocketIO;
 using Best.SocketIO.Events;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
-
+using System.Runtime.InteropServices;
 public class SocketIOManager : MonoBehaviour
 {
+        [DllImport("__Internal")]
+    private static extern void delayHideLoadingScreen();
+
     [SerializeField]
     private SlotBehaviour slotManager;
 
@@ -360,14 +363,14 @@ public class SocketIOManager : MonoBehaviour
 
     internal void CloseSocket()
     {
-        CloseSocketMesssage("EXIT");
-        DOVirtual.DelayedCall(0.1f, () =>
-        {
-            if (this.manager != null)
-            {
-                this.manager.Close();
-            }
-        });
+        SendDataWithNamespace("EXIT");
+        // DOVirtual.DelayedCall(0.1f, () =>
+        // {
+        //     if (this.manager != null)
+        //     {
+        //         this.manager.Close();
+        //     }
+        // });
     }
 
     private void CloseSocketMesssage(string eventName)
@@ -450,6 +453,16 @@ public class SocketIOManager : MonoBehaviour
                     isResultdone = true;
                     break;
                 }
+            case "ExitUser":
+                {
+                    if (this.manager != null)
+                    {
+                        Debug.Log("Dispose my Socket");
+                        this.manager.Close();
+                    }
+                    Application.ExternalCall("window.parent.postMessage", "onExit", "*");
+                    break;
+                }
         }
     }
 
@@ -480,6 +493,9 @@ public class SocketIOManager : MonoBehaviour
         slotManager.SetInitialUI();
 
         isLoaded = true;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        delayHideLoadingScreen();
+#endif
     }
 
     internal void AccumulateResult(double currBet)
