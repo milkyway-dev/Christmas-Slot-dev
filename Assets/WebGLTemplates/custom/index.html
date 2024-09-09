@@ -40,8 +40,20 @@
 
     <iframe src="https://milkyway-el-dorado-loader-dev.vercel.app/" id="loading-screen" crossorigin="anonymous" frameborder="0">
 
+
     </iframe>
   <canvas id="unity-canvas" tabindex="-1"></canvas>
+  <script>
+    var iframe=document.getElementById("loading-screen");
+
+    window.addEventListener("message", function(event) {
+
+    if (event.data.type === "authToken") {
+      iframe.src=event.data.loaderUrl
+    }
+
+  });
+  </script>
   <script>
     const canvas=document.querySelector("#unity-canvas");
 
