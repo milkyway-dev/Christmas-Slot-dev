@@ -395,6 +395,7 @@ public class SocketIOManager : MonoBehaviour
         }
     }
 
+  
     private void ParseResponse(string jsonObject)
     {
         Debug.Log(jsonObject);
