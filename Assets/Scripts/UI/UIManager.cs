@@ -118,13 +118,24 @@ public class UIManager : MonoBehaviour
 
     private bool isExit = false;
 
+    [SerializeField] private Button m_AwakeGameButton;
+
 
     private void Awake()
     {
         // if (Loading_Object) Loading_Object.SetActive(true);
         // StartCoroutine(LoadingRoutine());
+         SimulateClickByDefault();
     }
 
+  public void openQuitpopUp(){
+        OpenPopup(QuitPopup_Object);
+    }
+    private void SimulateClickByDefault()
+    {
+        Debug.Log("Awaken The Game...");
+        m_AwakeGameButton.onClick.Invoke();
+    }
     private IEnumerator LoadingRoutine()
     {
         float imageFill = 0f;
