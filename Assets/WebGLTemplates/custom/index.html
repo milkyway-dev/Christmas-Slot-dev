@@ -126,11 +126,10 @@
 
     window.addEventListener("message", function (event) {
 
-      if (event.data == "authToken") {
+      if (event.data.type == "authToken") {
         iframe.src = event.data.loaderUrl
-      }else if(event.data=="EXIT"){
+      }else if(event.data.type =="EXIT"){
         console.log("run in exit event");
-
         if (gameInstance != null) {
         // gameInstance.SendMessage('UIMananger', 'openQuitpopUp');
         gameInstance.SendMessage('SocketManager', 'CloseSocket');
