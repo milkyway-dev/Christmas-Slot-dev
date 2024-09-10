@@ -129,6 +129,8 @@
       if (event.data == "authToken") {
         iframe.src = event.data.loaderUrl
       }else if(event.data=="EXIT"){
+        console.log("run in exit event");
+
         if (gameInstance != null) {
         // gameInstance.SendMessage('UIMananger', 'openQuitpopUp');
         gameInstance.SendMessage('SocketManager', 'CloseSocket');
@@ -141,16 +143,17 @@
 
       if (gameInstance != null) {
         // gameInstance.SendMessage('UIMananger', 'openQuitpopUp');
+        console.log("run in beforeunload");
         gameInstance.SendMessage('SocketManager', 'CloseSocket');
       }
 
     })
   </script>
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     console.log = function () { };
     console.warn = function () { };
     console.error = function () { };
-  </script>
+  </script> -->
 </body>
 
 </html>
