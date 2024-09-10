@@ -24,38 +24,24 @@
       width: 100%;
     }
 
-    #loading-screen {
+      #loading-screen {
       position: absolute;
       width: 100%;
       height: 100%;
-    }
+  }
+
+
+
+
   </style>
 </head>
 
 <body>
 
-  <iframe src="https://milkyway-el-dorado-loader-dev.vercel.app/" id="loading-screen" crossorigin="anonymous"
-    frameborder="0">
-
-
-  </iframe>
   <canvas id="unity-canvas" tabindex="-1"></canvas>
-  <!-- <script>
-    var iframe = document.getElementById("loading-screen");
-
-    window.addEventListener("message", function (event) {
-
-      if (event.data.type === "authToken") {
-        iframe.src = event.data.loaderUrl
-      }
-
-    });
-  </script> -->
   <script>
-    const canvas = document.querySelector("#unity-canvas");
-    var iframe = document.getElementById("loading-screen");
+    const canvas=document.querySelector("#unity-canvas");
 
-    var gameInstance = null;
     function resizeCanvas() {
       const aspectRatio = 16 / 9; // Aspect ratio of the canvas
       let windowWidth = window.innerWidth;
@@ -87,63 +73,39 @@
     });
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/WebGL.loader.js";
-    var config = {
-      dataUrl: buildUrl + "/WebGL.data.unityweb",
-      frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
+      var loaderUrl = buildUrl + "/WebGL.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/WebGL.data.unityweb",
+        frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
         codeUrl: buildUrl + "/WebGL.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
-      companyName: "DefaultCompany",
-    productName: { { { JSON.stringify(PRODUCT_NAME) } } },
-    productVersion: { { { JSON.stringify(PRODUCT_VERSION) } } },
+        companyName: "DefaultCompany",
+        productName: "Christmas",
+        productVersion: "0.0.104",
       };
 
+        
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(canvas, config, (progress) => {
+          }).then((unityInstance) => {
+          }).catch((message) => {
+            alert(message);
+          });
+        };
+        
+        document.body.appendChild(script);
+        window.addEventListener('load', resizeCanvas());
+      window.focus();
 
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-      }).then((unityInstance) => {
-        gameInstance = unityInstance;
-      }).catch((message) => {
-        alert(message);
-      });
-    };
-
-    document.body.appendChild(script);
-    window.addEventListener('load', resizeCanvas());
-
-    window.addEventListener("message", function (event) {
-
-      if (event.data.type == "authToken") {
-        console.log("run in exit authtoken");
-
-        iframe.src = event.data.loaderUrl
-      }else if(event.data.type =="EXIT"){
-        console.log("run in exit event");
-        if (gameInstance != null) {
-        // gameInstance.SendMessage('UIMananger', 'openQuitpopUp');
-        gameInstance.SendMessage('SocketManager', 'CloseSocket');
-      }
-      }
-
-    });
-
-    window.addEventListener('beforeunload', function () {
-
-      if (gameInstance != null) {
-        // gameInstance.SendMessage('UIMananger', 'openQuitpopUp');
-        console.log("run in beforeunload");
-        gameInstance.SendMessage('SocketManager', 'CloseSocket');
-      }
-
-    })
   </script>
-  <!-- <script type="text/javascript">
-    console.log = function () { };
-    console.warn = function () { };
-    console.error = function () { };
-  </script> -->
+     <script type="text/javascript">
+        console.log = function() {};
+        console.warn = function() {};
+        console.error = function() {};
+    </script>
+
 </body>
 
 </html>
