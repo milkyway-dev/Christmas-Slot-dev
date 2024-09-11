@@ -80,8 +80,8 @@ public class UIManager : MonoBehaviour
     [Header("Quit Popup")]
     [SerializeField]
     private GameObject QuitPopup_Object;
-    [SerializeField]
-    private Button YesQuit_Button;
+    [SerializeField] private Button YesQuit_Button;
+    [SerializeField] private Button BonusQuit_Button;
     [SerializeField]
     private Button NoQuit_Button;
     [SerializeField]
@@ -245,8 +245,11 @@ public class UIManager : MonoBehaviour
         if (YesQuit_Button) YesQuit_Button.onClick.RemoveAllListeners();
         if (YesQuit_Button) YesQuit_Button.onClick.AddListener(CallOnExitFunction);
 
-        if (CloseAD_Button) CloseAD_Button.onClick.RemoveAllListeners();
-        if (CloseAD_Button) CloseAD_Button.onClick.AddListener(CallOnExitFunction);
+        if (YesQuit_Button) YesQuit_Button.onClick.RemoveAllListeners();
+        if (YesQuit_Button) YesQuit_Button.onClick.AddListener(CallOnExitFunction);
+
+        if (BonusQuit_Button) BonusQuit_Button.onClick.RemoveAllListeners();
+        if (BonusQuit_Button) BonusQuit_Button.onClick.AddListener(CallOnExitFunction);
 
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.RemoveAllListeners();
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.AddListener(CallOnExitFunction);
