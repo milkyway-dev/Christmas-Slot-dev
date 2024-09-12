@@ -11,8 +11,9 @@ using Newtonsoft.Json;
 using Best.SocketIO;
 using Best.SocketIO.Events;
 using System.Runtime.Serialization;
+using Best.HTTP.JSON;
 using Newtonsoft.Json.Linq;
-using System.Runtime.InteropServices;
+
 public class SocketIOManager : MonoBehaviour
 {
     [SerializeField]
@@ -34,9 +35,6 @@ public class SocketIOManager : MonoBehaviour
 
     private SocketManager manager;
 
-    [SerializeField]
-    internal JSHandler _jsManager;
-
     protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
     // protected string TestSocketURI = "http://localhost:5000";
     protected string SocketURI = null;
@@ -52,11 +50,10 @@ public class SocketIOManager : MonoBehaviour
     internal bool isLoaded = false;
 
     internal bool SetInit=false;
+
     private void Start()
     {
-        //Debug.unityLogger.logEnabled = false;
         OpenSocket();
-        
     }
 
     void ReceiveAuthToken(string jsonData)
@@ -74,59 +71,8 @@ public class SocketIOManager : MonoBehaviour
     private void Awake()
     {
         isLoaded = false;
+        SetInit = false;
     }
-
-    //    private void OpenSocket()
-    //    {
-    //        // Create and setup SocketOptions
-    //        SocketOptions options = new SocketOptions();
-    //        options.AutoConnect = false;
-
-    //        Application.ExternalCall("window.parent.postMessage", "authToken", "*");
-
-    //#if UNITY_WEBGL && !UNITY_EDITOR
-    //        _jsManager.RetrieveAuthToken("token", authToken =>
-    //        {
-    //            if (!string.IsNullOrEmpty(authToken))
-    //            {
-    //                Debug.Log("Auth token is " + authToken);
-    //                Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
-    //                {
-    //                    return new
-    //                    {
-    //                        token = authToken
-    //                    };
-    //                };
-    //                options.Auth = authFunction;
-    //                // Proceed with connecting to the server
-    //                SetupSocketManager(options);
-    //            }
-    //            else
-    //            {
-    //                Application.ExternalEval(@"
-    //                window.addEventListener('message', function(event) {
-    //                    if (event.data.type === 'authToken') {
-    //                        // Send the message to Unity
-    //                        SendMessage('SocketManager', 'ReceiveAuthToken', event.data.cookie);
-    //                    }});");
-
-    //                // Start coroutine to wait for the auth token
-    //                StartCoroutine(WaitForAuthToken(options));
-    //            }
-    //        });
-    //#else
-    //        Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
-    //        {
-    //            return new
-    //            {
-    //                token = testToken
-    //            };
-    //        };
-    //        options.Auth = authFunction;
-    //        // Proceed with connecting to the server
-    //        SetupSocketManager(options);
-    //#endif
-    //    }
 
     private void OpenSocket()
     {
@@ -197,30 +143,6 @@ public class SocketIOManager : MonoBehaviour
         SetupSocketManager(options);
     }
 
-    //private IEnumerator WaitForAuthToken(SocketOptions options)
-    //{
-    //    // Wait until myAuth is not null
-    //    while (myAuth == null)
-    //    {
-    //        yield return null;
-    //    }
-
-    //    // Once myAuth is set, configure the authFunction
-    //    Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
-    //    {
-    //        return new
-    //        {
-    //            token = myAuth
-    //        };
-    //    };
-    //    options.Auth = authFunction;
-
-    //    Debug.Log("Auth function configured with token: " + myAuth);
-
-    //    // Proceed with connecting to the server
-    //    SetupSocketManager(options);
-    //}
-
     private void SetupSocketManager(SocketOptions options)
     {
 #if UNITY_EDITOR
@@ -242,7 +164,7 @@ public class SocketIOManager : MonoBehaviour
         this.manager.Socket.On<string>("AnotherDevice", OnSocketOtherDevice);
 
         // Start connecting to the server
-        //this.manager.Open();
+        this.manager.Open();
     }
 
     // Connected event handler implementation
@@ -274,7 +196,6 @@ public class SocketIOManager : MonoBehaviour
         if (state)
         {
             Debug.Log("my state is " + state);
-            //InitRequest("AUTH");
         }
         else
         {
@@ -303,96 +224,14 @@ public class SocketIOManager : MonoBehaviour
 
     private void AliveRequest()
     {
-        //InitData message = new InitData();
-        //if (this.manager.Socket != null && this.manager.Socket.IsOpen)
-        //{
-        //    this.manager.Socket.Emit("YES I AM ALIVE");
-        //    Debug.Log("JSON data sent: alive");
-        //}
-        //else
-        //{
-        //    Debug.LogWarning("Socket is not connected.");
-        //}
         SendDataWithNamespace("YES I AM ALIVE");
-    }
-
-    private void SendDataWithNamespace(string eventName, string json = null)
-    {
-        // Send the message
-        if (this.manager.Socket != null && this.manager.Socket.IsOpen)
-        {
-            if (json != null)
-            {
-                this.manager.Socket.Emit(eventName, json);
-                Debug.Log("JSON data sent: " + json);
-            }
-            else
-            {
-                this.manager.Socket.Emit(eventName);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Socket is not connected.");
-        }
-    }
-
-    private void InitRequest(string eventName)
-    {
-        InitData message = new InitData();
-        message.Data = new AuthData();
-        message.Data.GameID = gameID;
-        message.id = "Auth";
-        // Serialize message data to JSON
-        string json = JsonUtility.ToJson(message);
-        Debug.Log(json);
-        // Send the message
-        if (this.manager.Socket != null && this.manager.Socket.IsOpen)
-        {
-            this.manager.Socket.Emit(eventName, json);
-            Debug.Log("JSON data sent: " + json);
-        }
-        else
-        {
-            Debug.LogWarning("Socket is not connected.");
-        }
     }
 
     internal void CloseSocket()
     {
         SendDataWithNamespace("EXIT");
-        // DOVirtual.DelayedCall(0.1f, () =>
-        // {
-        //     if (this.manager != null)
-        //     {
-        //         this.manager.Close();
-        //     }
-        // });
     }
 
-    private void CloseSocketMesssage(string eventName)
-    {
-        // Construct message data
-
-        ExitData message = new ExitData();
-        message.id = "EXIT";
-
-        // Serialize message data to JSON
-        string json = JsonUtility.ToJson(message);
-        Debug.Log(json);
-        // Send the message
-        if (this.manager.Socket != null && this.manager.Socket.IsOpen)
-        {
-            this.manager.Socket.Emit(eventName, json);
-            Debug.Log("JSON data sent: " + json);
-        }
-        else
-        {
-            Debug.LogWarning("Socket is not connected.");
-        }
-    }
-
-  
     private void ParseResponse(string jsonObject)
     {
         Debug.Log(jsonObject);
@@ -470,17 +309,6 @@ public class SocketIOManager : MonoBehaviour
     }
     private void PopulateSlotSocket(List<string> slotPop, List<string> LineIds)
     {
-        //for (int i = 0; i < slotPop.Count; i++)
-        //{
-        //    List<int> points = slotPop[i]?.Split(',')?.Select(Int32.Parse)?.ToList();
-        //    slotManager.PopulateInitalSlots(i, points);
-        //}
-
-        //for (int i = 0; i < slotPop.Count; i++)
-        //{
-        //    slotManager.LayoutReset(i);
-        //}
-
         slotManager.shuffleInitialMatrix();
 
         for (int i = 0; i < LineIds.Count; i++)
@@ -498,7 +326,15 @@ public class SocketIOManager : MonoBehaviour
     internal void AccumulateResult(double currBet)
     {
         isResultdone = false;
-        SendDataWithNamespace("SPIN", currBet, "message");
+        MessageData message = new MessageData();
+        message.data = new BetData();
+        message.data.currentBet = currBet;
+        message.data.spins = 1;
+        message.data.currentLines = 20;
+        message.id = "SPIN";
+        // Serialize message data to JSON
+        string json = JsonUtility.ToJson(message);
+        SendDataWithNamespace("message", json);
     }
 
     internal void OnGamble()
@@ -512,15 +348,7 @@ public class SocketIOManager : MonoBehaviour
 
         string json = JsonUtility.ToJson(message);
         Debug.Log(json);
-        if (this.manager.Socket != null && this.manager.Socket.IsOpen)
-        {
-            this.manager.Socket.Emit("message", json);
-            Debug.Log("JSON data sent: " + json);
-        }
-        else
-        {
-            Debug.LogWarning("Socket is not connected.");
-        }
+        SendDataWithNamespace("message", json);
     }
 
     internal void GambleCollectCall()
@@ -543,35 +371,23 @@ public class SocketIOManager : MonoBehaviour
 
         string json = JsonUtility.ToJson(message);
         Debug.Log(json);
-        if (this.manager.Socket != null && this.manager.Socket.IsOpen)
-        {
-            this.manager.Socket.Emit("message", json);
-            Debug.Log("JSON data sent: " + json);
-        }
-        else
-        {
-            Debug.LogWarning("Socket is not connected.");
-        }
+        SendDataWithNamespace("message", json);
     }
 
-    private void SendDataWithNamespace(string namespaceName, double bet, string eventName)
+    private void SendDataWithNamespace(string eventName, string json = null)
     {
         // Construct message data
-
-        MessageData message = new MessageData();
-        message.data = new BetData();
-        message.data.currentBet = bet;
-        message.data.spins = 1;
-        message.data.currentLines = 20;
-        message.id = namespaceName;
-        // Serialize message data to JSON
-        string json = JsonUtility.ToJson(message);
-        Debug.Log(json);
-        // Send the message
         if (this.manager.Socket != null && this.manager.Socket.IsOpen)
         {
-            this.manager.Socket.Emit(eventName, json);
-            Debug.Log("JSON data sent: " + json);
+            if (json != null)
+            {
+                this.manager.Socket.Emit(eventName, json);
+                Debug.Log("JSON data sent: " + json);
+            }
+            else
+            {
+                this.manager.Socket.Emit(eventName);
+            }
         }
         else
         {
