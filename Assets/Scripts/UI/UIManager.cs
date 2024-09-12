@@ -36,9 +36,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text Bonus_Text;
     [SerializeField] private TMP_Text Wild_Text;
 
-
-
-
     [Header("Settings Popup")]
     [SerializeField] private Button Setting_button;
     [SerializeField] private Button SettingExit_button;
@@ -99,11 +96,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite BigWin_Sprite;
     [SerializeField] private Sprite MegaWin_Sprite;
 
-    //[Header("gamble game")]
-    //[SerializeField] private Button Gamble_button;
-    //[SerializeField] private Button GambleExit_button;
-    //[SerializeField] private GameObject Gamble_game;
-
     [Header("Audio")]
     [SerializeField] private AudioController audioController;
 
@@ -123,8 +115,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        // if (Loading_Object) Loading_Object.SetActive(true);
-        // StartCoroutine(LoadingRoutine());
          SimulateClickByDefault();
     }
 
@@ -215,12 +205,6 @@ public class UIManager : MonoBehaviour
         if (Setting_back_button) Setting_back_button.onClick.RemoveAllListeners();
         if (Setting_back_button) Setting_back_button.onClick.AddListener(delegate { ClosePopup(Setting_panel); });
 
-        //if (Gamble_button) Gamble_button.onClick.RemoveAllListeners();
-        //if (Gamble_button) Gamble_button.onClick.AddListener(delegate { OpenPopup(Gamble_game); });
-
-        //if (GambleExit_button) GambleExit_button.onClick.RemoveAllListeners();
-        //if (GambleExit_button) GambleExit_button.onClick.AddListener(delegate { ClosePopup(Gamble_game); });
-
         if (GameExit_Button) GameExit_Button.onClick.RemoveAllListeners();
         if (GameExit_Button) GameExit_Button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
 
@@ -263,18 +247,10 @@ public class UIManager : MonoBehaviour
 
     internal void DisconnectionPopup()
     {
-        //if (isReconnection)
-        //{
-        //    OpenPopup(ReconnectPopup_Object);
-        //}
-        //else
-        //{
-        //    ClosePopup(ReconnectPopup_Object);
         if (!isExit)
         {
             OpenPopup(DisconnectPopup_Object);
         }
-        //}
     }
 
 
@@ -322,7 +298,6 @@ public class UIManager : MonoBehaviour
         isExit = true;
         audioController.PlayButtonAudio();
         slotManager.CallCloseSocket();
-        // Application.ExternalCall("window.parent.postMessage", "onExit", "*");
     }
 
     internal void InitialiseUIData(string SupportUrl, string AbtImgUrl, string TermsUrl, string PrivacyUrl, Paylines symbolsText)
@@ -352,18 +327,6 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < paylines.symbols.Count; i++)
         {
-            // if (paylines.symbols[i].Name.ToUpper() == "FREESPIN")
-            // {
-            //     if (FreeSpin_Text) FreeSpin_Text.text = paylines.symbols[i].description.ToString();
-            // }
-            // if (paylines.symbols[i].Name.ToUpper() == "SCATTER")
-            // {
-            //     if (Scatter_Text) Scatter_Text.text = paylines.symbols[i].description.ToString();
-            // }
-            // if (paylines.symbols[i].Name.ToUpper() == "JACKPOT")
-            // {
-            //     if (Jackpot_Text) Jackpot_Text.text = paylines.symbols[i].description.ToString();
-            // }
             
             if(paylines.symbols[i].Name.ToUpper() == "BONUS")
             {
