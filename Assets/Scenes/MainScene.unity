@@ -16656,8 +16656,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: In the game there are 5 similar present box.  tap on any one to reveal
-    the reward.
+  m_text: In this game, you'll see five similar present box. Select them one by one
+    to reveal your prize until game is over.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ed4c9d0c02d42498585269f6c53a5ed4, type: 2}
   m_sharedMaterial: {fileID: -7417293700509352667, guid: ed4c9d0c02d42498585269f6c53a5ed4, type: 2}
