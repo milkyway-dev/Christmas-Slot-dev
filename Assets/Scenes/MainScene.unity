@@ -6487,7 +6487,7 @@ MonoBehaviour:
   slotManager: {fileID: 2046803210}
   uiManager: {fileID: 377874625}
   bonusdata: []
-  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDgzY2U1YTI3YmY5MDI0NDNlYjRjMCIsInVzZXJuYW1lIjoic2F5YW4iLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzI5NTkyNjQzLCJleHAiOjE3MzAxOTc0NDN9.pDET0HWfZkC8TALUNBfcmfG7lKKxE_N4DCf992bNJ5w
+  testToken: 
 --- !u!1 &507580410
 GameObject:
   m_ObjectHideFlags: 0
@@ -24525,8 +24525,6 @@ MonoBehaviour:
   _bonusManager: {fileID: 207527277}
   IsAutoSpin: 0
   IsSpinning: 0
-  currentBalance: 999999
-  currentTotalBet: 0
   TempLineIds: 
   x_animationString: []
   y_animationString: []
