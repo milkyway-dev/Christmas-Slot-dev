@@ -130,8 +130,8 @@ public class SlotBehaviour : MonoBehaviour
 
     Coroutine AutoSpinRoutine = null;
     Coroutine tweenroutine;
-    bool IsAutoSpin = false;
-    bool IsSpinning = false;
+    [SerializeField]bool IsAutoSpin = false;
+    [SerializeField]bool IsSpinning = false;
     bool SlotRunning = false;
     internal bool CheckPopups = false;
     private int BetCounter = 0;
@@ -552,8 +552,8 @@ public class SlotBehaviour : MonoBehaviour
     private IEnumerator TweenRoutine()
     {
         gambleController.GambleTweeningAnim(false);
-        currentBet = SocketManager.initialData.Bets[BetCounter];
-
+        currentBet = SocketManager.initialData.Bets[BetCounter]*SocketManager.initialData.Lines.Count;
+        
         if (currentBalance < currentTotalBet)
         {
             CompareBalance();
@@ -602,7 +602,7 @@ public class SlotBehaviour : MonoBehaviour
         SocketManager.AccumulateResult(BetCounter);
 
         yield return new WaitUntil(() => SocketManager.isResultdone);
-
+        currentBalance=SocketManager.playerdata.Balance;
         for (int j = 0; j < SocketManager.resultData.ResultReel.Count; j++)
         {
             List<int> resultnum = SocketManager.resultData.FinalResultReel[j]?.Split(',')?.Select(Int32.Parse)?.ToList();
