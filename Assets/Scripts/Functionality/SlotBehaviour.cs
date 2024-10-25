@@ -135,9 +135,9 @@ public class SlotBehaviour : MonoBehaviour
     bool SlotRunning = false;
     internal bool CheckPopups = false;
     private int BetCounter = 0;
-    [SerializeField]private double currentBalance = 0;
+    private double currentBalance = 0;
     internal double currentBet = 0;
-    [SerializeField]private double currentTotalBet = 0;
+    private double currentTotalBet = 0;
     internal bool IsHoldSpin = false;
     private bool CheckSpinAudio = false;
 
@@ -552,8 +552,7 @@ public class SlotBehaviour : MonoBehaviour
     private IEnumerator TweenRoutine()
     {
         gambleController.GambleTweeningAnim(false);
-        currentTotalBet = SocketManager.initialData.Bets[BetCounter]*SocketManager.initialData.Lines.Count;
-        currentBalance=SocketManager.playerdata.Balance;
+        currentBet = SocketManager.initialData.Bets[BetCounter]*SocketManager.initialData.Lines.Count;
         
         if (currentBalance < currentTotalBet)
         {
@@ -603,7 +602,7 @@ public class SlotBehaviour : MonoBehaviour
         SocketManager.AccumulateResult(BetCounter);
 
         yield return new WaitUntil(() => SocketManager.isResultdone);
-
+        currentBalance=SocketManager.playerdata.Balance;
         for (int j = 0; j < SocketManager.resultData.ResultReel.Count; j++)
         {
             List<int> resultnum = SocketManager.resultData.FinalResultReel[j]?.Split(',')?.Select(Int32.Parse)?.ToList();
