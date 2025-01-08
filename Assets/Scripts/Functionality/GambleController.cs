@@ -41,6 +41,7 @@ public class GambleController : MonoBehaviour
     private Sprite spare2card_Sprite; // Sprite for the second spare card
     internal bool gambleStart = false; // Indicates if the gamble has started
     internal bool isResult = false; // Indicates if the result has been received
+    private bool isAutoSpinOn;
 
     private Tweener Gamble_Tween_Scale = null; // Tweener for scaling the double button
 
@@ -90,6 +91,10 @@ public class GambleController : MonoBehaviour
     void StartGamblegame(bool isRepeat = false)
     {
         if (GambleEnd_Object) GambleEnd_Object.SetActive(false); // Hide end screen
+
+        if (!isRepeat)
+            isAutoSpinOn = slotController.IsAutoSpin;
+
         GambleTweeningAnim(false); // Stop animation
         slotController.DeactivateGamble(); // Deactivate the gamble slot
         winamount.text = "0"; // Reset win amount text
@@ -107,8 +112,14 @@ public class GambleController : MonoBehaviour
     // Resets the game and collects winnings
     private void OnReset()
     {
+        
         if (slotController) slotController.GambleCollect(); // Collect winnings
         NormalCollectFunction(); // Reset the gamble game
+
+        if (isAutoSpinOn)
+        {
+            slotController.AutoSpin();
+        }
     }
 
     // Normal collect function
@@ -249,6 +260,10 @@ public class GambleController : MonoBehaviour
         DealerCard_Script.Card_Button.image.sprite = cardCover;
         DealerCard_Script.once = false;
         toggleDoubleButton(false);
+        if (isAutoSpinOn)
+        {
+            slotController.AutoSpin();
+        }
     }
 
     #endregion
