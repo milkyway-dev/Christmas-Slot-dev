@@ -95,6 +95,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite HugeWin_Sprite;
     [SerializeField] private Sprite BigWin_Sprite;
     [SerializeField] private Sprite MegaWin_Sprite;
+    [SerializeField] private Button MegaWinHideBtn;
+    private Tween TextTween, WinTween;
 
     [Header("Audio")]
     [SerializeField] private AudioController audioController;
@@ -238,6 +240,9 @@ public class UIManager : MonoBehaviour
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.RemoveAllListeners();
         if (CloseDisconnect_Button) CloseDisconnect_Button.onClick.AddListener(CallOnExitFunction);
 
+        if (MegaWinHideBtn) MegaWinHideBtn.onClick.RemoveAllListeners();
+        if (MegaWinHideBtn) MegaWinHideBtn.onClick.AddListener(OnClickMegaWinHide);
+
     }
 
     internal void LowBalPopup()
@@ -273,12 +278,12 @@ public class UIManager : MonoBehaviour
         if (megawin) megawin.SetActive(true);
         if (MainPopup_Object) MainPopup_Object.SetActive(true);
 
-        DOTween.To(() => initAmount, (val) => initAmount = val, amount, 1f).OnUpdate(() =>
+        TextTween = DOTween.To(() => initAmount, (val) => initAmount = val, amount, 1f).OnUpdate(() =>
         {
             if (megawin_text) megawin_text.text = initAmount.ToString("f2");
         });
 
-        DOVirtual.DelayedCall(3.5f, () =>
+        WinTween = DOVirtual.DelayedCall(3.5f, () =>
         {
             if (MainPopup_Object) MainPopup_Object.SetActive(false);
             if (megawin) megawin.SetActive(false);
@@ -286,6 +291,17 @@ public class UIManager : MonoBehaviour
             slotManager.CheckPopups = false;
 
         });
+    }
+    private void OnClickMegaWinHide()
+    {
+        TextTween?.Kill();
+        WinTween?.Kill();
+
+
+        if (MainPopup_Object) MainPopup_Object.SetActive(false);
+        if (megawin) megawin.SetActive(false);
+        if (megawin_text) megawin_text.text = "0";
+        slotManager.CheckPopups = false;
     }
 
     internal void ADfunction()
@@ -312,15 +328,15 @@ public class UIManager : MonoBehaviour
             string text = null;
             if (paylines.symbols[i].Multiplier[0][0] != 0)
             {
-                text += "<color=yellow>5x - </color>" + paylines.symbols[i].Multiplier[0][0];
+                text += "<color=yellow>5x - </color>" + paylines.symbols[i].Multiplier[0][0] +"x";
             }
             if (paylines.symbols[i].Multiplier[1][0] != 0)
             {
-                text += "\n<color=yellow>4x - </color>" + paylines.symbols[i].Multiplier[1][0];
+                text += "\n<color=yellow>4x - </color>" + paylines.symbols[i].Multiplier[1][0]+"x";
             }
             if (paylines.symbols[i].Multiplier[2][0] != 0)
             {
-                text += "\n<color=yellow>3x - </color>" + paylines.symbols[i].Multiplier[2][0];
+                text += "\n<color=yellow>3x - </color>" + paylines.symbols[i].Multiplier[2][0]+"x";
             }
             if (SymbolsText[i]) SymbolsText[i].text = text;
         }
