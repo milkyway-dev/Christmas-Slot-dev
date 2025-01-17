@@ -25,12 +25,12 @@ public class SelectBonusGift : MonoBehaviour
     private void SelectGift()
     {
         if (_bonusManager) _bonusManager.enableRayCastPanel(true);
-        int value = 0;
+        double value = 0;
         value = _bonusManager.GetValue();
         if(value > 0)
         {
             if (_bonusManager) _bonusManager.PlayWinLooseSound(true);
-            if (text_AnimScript) text_AnimScript.SetText("+" + value.ToString());
+            if (text_AnimScript) text_AnimScript.SetText("+" + value.ToString("f3"));
         }
         else
         {
