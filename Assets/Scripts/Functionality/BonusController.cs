@@ -8,6 +8,11 @@ using TMPro;
 public class BonusController : MonoBehaviour
 {
     [SerializeField]
+    private SocketIOManager SocketManager;
+    [SerializeField]
+    private SlotBehaviour slotBehaviour;
+
+    [SerializeField]
     private GameObject Bonus_Object;
     [SerializeField]
     private SlotBehaviour slotManager;
@@ -60,11 +65,11 @@ public class BonusController : MonoBehaviour
         if (Bonus_Object) Bonus_Object.SetActive(false);
     }
 
-    internal int GetValue()
+    internal double GetValue()
     {
-        int value = 0;
+        double value = 0;
 
-        value = (int)(CaseValues[index] * slotManager.currentBet);
+        value = CaseValues[index] * SocketManager.initialData.Bets[slotBehaviour.BetCounter];
 
         index++;
 
@@ -77,7 +82,7 @@ public class BonusController : MonoBehaviour
             isGameOver = true;
         }
 
-        if (mainamount_Text) mainamount_Text.text = amount.ToString();
+        if (mainamount_Text) mainamount_Text.text = amount.ToString("f3");
 
         return value;
     }
