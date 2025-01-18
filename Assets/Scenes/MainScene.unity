@@ -2409,6 +2409,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d4f4b0ae64f462da0cf49515c756ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SocketManager: {fileID: 500036492}
+  slotBehaviour: {fileID: 2046803210}
   Bonus_Object: {fileID: 1483849627}
   slotManager: {fileID: 2046803210}
   raycastPanel: {fileID: 1152526695}
@@ -6620,7 +6622,7 @@ MonoBehaviour:
   slotManager: {fileID: 2046803210}
   uiManager: {fileID: 377874625}
   bonusdata: []
-  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NjU1MTA1MGJjMDc4ODcyMWUxYmEwMSIsInVzZXJuYW1lIjoiZGV2MDEiLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzM2MTM1NjU5LCJleHAiOjE3MzY3NDA0NTl9.dNYV9sVszExjH-aNKjYZ-1jJ9-ozumWYd5y05zOwvnI
+  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NjU1MTA1MGJjMDc4ODcyMWUxYmEwMSIsInVzZXJuYW1lIjoiZGV2MDEiLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzM3MDg1OTE2LCJleHAiOjE3Mzc2OTA3MTZ9.mNyzZqnK4Wcrikp5yrNtvuQ7pCJa--qzC1-MTn3P4FM
 --- !u!1 &507580410
 GameObject:
   m_ObjectHideFlags: 0
@@ -17121,7 +17123,7 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -21887,7 +21889,7 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -23378,7 +23380,7 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -25542,7 +25544,7 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -25796,7 +25798,7 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0

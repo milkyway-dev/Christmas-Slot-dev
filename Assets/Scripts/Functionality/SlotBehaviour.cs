@@ -136,7 +136,7 @@ public class SlotBehaviour : MonoBehaviour
     [SerializeField] bool IsSpinning = false;
     bool SlotRunning = false;
     internal bool CheckPopups = false;
-    private int BetCounter = 0;
+    internal int BetCounter = 0;
     private double currentBalance = 0;
     internal double currentBet = 0;
     private double currentTotalBet = 0;
@@ -649,6 +649,7 @@ public class SlotBehaviour : MonoBehaviour
         {
 
             yield return new WaitForSeconds(0.1f);
+            StopSpinToggle = true;
         }
         else
         {
